@@ -28,11 +28,10 @@ After installing terraform and configuring google cloud account. We have to run 
 There are many arguments in terraform, but this case we just wanna run application for first steps.
 
 1. **terraform commands**
+  * `terraform apply -auto-approve`
+  *  This command applies configuration defined on terraform files approving automatically changes.
 
-`terraform apply -auto-approve`
-This command applies configuration defined on terraform files approving automatically changes.
+  * `terraform destroy -auto-approve`
+  * Against of command above, this remove everything created.
 
-`terraform destroy -auto-approve`
-Against of command above, this remove everything created.
-
-It's important to know, but not explained deeply in this tutorial that terraform maintains a state from your infrastructure.
+**It's important to know, but not explained deeply in this tutorial that terraform maintains a state from your infrastructure.**
