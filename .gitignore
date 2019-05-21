@@ -5,3 +5,4 @@ credentials.json
 # .tfstate files
 *.tfstate
 *.tfstate.*
+*.DS_Store
