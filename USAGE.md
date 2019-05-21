@@ -3,7 +3,7 @@
 ## Installation
 1. Clone project locally
 ```bash
-$ git clone https://github.com/stcox/gke-wordpress.git && cd gke-wordpress
+$ git clone https://github.com/thiagofernandocosta/gcp_vm-in-few-steps && cd gcp_vm-in-few-steps
 ```
 
 2. Install **Terraform**
@@ -23,10 +23,16 @@ $ terraform version
 
 ## Usage
 ### Running and getting up
-The example site uses `mysite-com`, for the site's namespace, and `mysite.com` for the domain. **All WordPress site namespaces are automatically prefixed with `wp-`** to make them easier to find; consequently, the example namespace will appear as **`wp-mysite-com`** in k8s.
+After installing terraform and configuring google cloud account. We have to run application using `terraform`, let's go.
 
-The example domain name is, `mysite.com` must be substituted with your own domain.
+There are many arguments in terraform, but this case we just wanna run application for first steps.
 
-Kube-lego provides free LetsEncrypt SSL certificates for any domains you control. LetsEncrypt is enabled by default, but can be disabled in the sites `values.yaml` file.
+1. **terraform commands**
 
-1. **Create an A record** for your domain, `mysite.com` at domain registrar (Godaddy, et al.), and point it to your Ingress IP address. [Get your cluster's Ingress IP Address](https://console.cloud.google.com/kubernetes/discovery).
+`terraform apply -auto-approve`
+This command applies configuration defined on terraform files approving automatically changes.
+
+`terraform destroy -auto-approve`
+Against of command above, this remove everything created.
+
+It's important to know, but not explained deeply in this tutorial that terraform maintains a state from your infrastructure.
