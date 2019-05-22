@@ -1,9 +1,7 @@
 resource "google_compute_instance" "default" {
-  name         = "my-first-vm-from-scratch"
+  name         = "virtual-machine-from-terraform"
   machine_type = "f1-micro"
   zone         = "us-central1-a"
-
-  tags = ["environment", "testing"]
 
   boot_disk {
     initialize_params {
@@ -15,22 +13,30 @@ resource "google_compute_instance" "default" {
     network = "default"
 
     access_config {
-      // Ephemeral IP
+      // Include this section to give the VM an external ip address
     }
   }
 
-  metadata {
-        startup-script = <<SCRIPT
-        apt-get -y update
-        apt-get -y install nginx
-        export HOSTNAME=$(hostname | tr -d '\n')
-        export PRIVATE_IP=$(curl -sf -H 'Metadata-Flavor:Google' http://metadata/computeMetadata/v1/instance/network-interfaces/0/ip | tr -d '\n')
-        echo "Welcome to $HOSTNAME - $PRIVATE_IP" > /usr/share/nginx/www/index.html
-        service nginx start
-        SCRIPT
-    } 
+    metadata_startup_script = "sudo apt-get update && sudo apt-get install apache2 -y && echo '<!doctype html><html><body><h1>Hello from Terraform on Google Cloud!</h1></body></html>' | sudo tee /var/www/html/index.html"
 
-  service_account {
-    scopes = ["userinfo-email", "compute-ro", "storage-ro"]
+    // Apply the firewall rule to allow external IPs to access this instance
+    tags = ["http-server"]
+}
+
+resource "google_compute_firewall" "http-server" {
+  name    = "default-allow-http-terraform"
+  network = "default"
+
+  allow {
+    protocol = "tcp"
+    ports    = ["80"]
   }
+
+  // Allow traffic from everywhere to instances with an http-server tag
+  source_ranges = ["0.0.0.0/0"]
+  target_tags   = ["http-server"]
+}
+
+output "ip" {
+  value = "${google_compute_instance.default.network_interface.0.access_config.0.nat_ip}"
 }
